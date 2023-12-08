@@ -3,7 +3,7 @@ import './App.css'
 
 export const App = () => {
   const [users, setUsers] = useState<{ id: number; name: string }[]>([])
-  const API_INVOKE_URL = 'http://localhost:3000/users'
+  const API_INVOKE_URL = 'http://localhost:8081/users'
 
   const callApi = async () => {
     await fetch(API_INVOKE_URL, {
