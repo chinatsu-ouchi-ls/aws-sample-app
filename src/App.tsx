@@ -2,35 +2,30 @@ import { useState } from 'react'
 import './App.css'
 
 export const App = () => {
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const API_INVOKE_URL = 'https://p6av0qjgsh.execute-api.ap-northeast-1.amazonaws.com/dev'
+  const [users, setUsers] = useState<{ id: number; name: string }[]>([])
+  const API_INVOKE_URL = 'http://localhost:3000/users'
 
-  const onSubmit = async () => {
-    if (!firstName || !lastName) return
+  const callApi = async () => {
     await fetch(API_INVOKE_URL, {
-      method: 'POST',
+      method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ firstName, lastName }),
     })
-      .then((response) => {
-        console.log(response)
+      .then((response) => response.json()) // レスポンスをJSONに変換する
+      .then((data) => {
+        setUsers(data) // データをstateにセットする
+        console.log(data)
       })
       .catch((error) => {
         console.log(error)
       })
   }
+
   return (
     <div className='App'>
-      <form>
-        <label>First Name :</label>
-        <input type='text' id='fName' onChange={(event) => setFirstName(event.target.value)} />
-        <label>Last Name :</label>
-        <input type='text' id='lName' onChange={(event) => setLastName(event.target.value)} />
-        <button type='button' onClick={onSubmit}>
-          Call API
-        </button>
-      </form>
+      <button onClick={callApi}>click here!</button>
+      {users?.map((user) => (
+        <p key={user.id}>{user.name}</p>
+      ))}
     </div>
   )
 }
